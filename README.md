@@ -1,56 +1,33 @@
-# Welcome to your Expo app 👋
+# Receptbok – Mobil
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+En mobilapp för receptboken, byggd med React Native och Expo. Hämtar samma data som webbappen från backend-API:t och visar recept i lista och detaljvy, med möjlighet att skapa, ändra och ta bort.
 
-## Get started
+Backend-repo: https://github.com/sbrindmark/ReceptbokBackend
 
-1. Install dependencies
+## Teknik
+- React Native + Expo
+- Node.js
+- Backend måste vara igång (se backend-repot). Appen hittar datorns IP automatiskt, men telefonen och datorn måste vara på **samma nätverk**.
 
-   ```bash
-   npm install
-   ```
-
-2. Start the app
-
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
+## Kom igång
 ```bash
-npm run reset-project
+git clone https://github.com/sbrindmark/ReceptbokMobile.git
+cd ReceptbokMobile
+npm install
+npx expo start
 ```
+Starta **backend först** (se backend-repot). Skanna sedan QR-koden med **Expo Go** på din telefon, eller tryck `i` (iOS-simulator) / `a` (Android-emulator).
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## Funktioner
+- Lista recept i ett rutnät (två per rad)
+- Detaljvy för ett enskilt recept
+- Skapa, ändra och ta bort recept via API:et
+- Laddningsindikator, pull-to-refresh och tomt-läge
+- Felmeddelande visas om ett API-anrop misslyckas
 
-### Other setup steps
-
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## Tekniska val
+- **Expo Router (fil-baserad routing):** skärmarna ligger i `app/`-mappen och routas automatiskt utifrån filstrukturen, i stället för att registreras manuellt med React Navigation – mindre kod och tydligare struktur.
+- **Central `api.js`:** all backend-kommunikation ligger på ett ställe. Adressen till datorn hämtas automatiskt via `expo-constants` (`hostUri`), så appen fungerar på valfritt nätverk utan hårdkodad IP.
+- **`useRecipes`-hook:** listskärmens data och logik ligger i en egen hook, skild från UI:t (separation of concerns).
+- **Delad `RecipeForm`:** samma formulärkomponent återanvänds för både skapa och ändra.
+- **Samma backend som webben:** mobil och webb delar API och data – bara gränssnittslagret skiljer sig.
