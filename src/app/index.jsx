@@ -1,38 +1,10 @@
-import { getRecipes } from '../lib/api';
-import { Link, Stack, useFocusEffect } from 'expo-router';
-import { useCallback, useState } from 'react';
+import { Link, Stack } from 'expo-router';
 import { ActivityIndicator, Button, FlatList, Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import { useRecipes } from '../hooks/useRecipes';
 import { colors } from '../constants/colors';
 
 export default function RecipeListScreen() {
-  const [recipes, setRecipes] = useState([]);
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
-
-  async function loadRecipes() {
-    try {
-      const data = await getRecipes();
-      setRecipes(data);
-      setError(null);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
-    }
-  }
-
-  useFocusEffect(
-    useCallback(() => {
-      loadRecipes();
-    }, [])
-  );
-
-  function onRefresh() {
-    setRefreshing(true);
-    loadRecipes();
-  }
+  const { recipes, error, loading, refreshing, refresh } = useRecipes();
 
   const header = (
     <Stack.Screen
@@ -61,7 +33,7 @@ export default function RecipeListScreen() {
       <View style={styles.center}>
         {header}
         <Text style={styles.error}>{error}</Text>
-        <Button title="Försök igen" onPress={loadRecipes} color={colors.primary} />
+        <Button title="Försök igen" onPress={refresh} color={colors.primary} />
       </View>
     );
   }
@@ -76,7 +48,7 @@ export default function RecipeListScreen() {
         columnWrapperStyle={styles.row}
         contentContainerStyle={styles.list}
         refreshing={refreshing}
-        onRefresh={onRefresh}
+        onRefresh={refresh}
         ListEmptyComponent={
           <Text style={styles.empty}>Inga recept än. Tryck ＋ för att lägga till ett!</Text>
         }
